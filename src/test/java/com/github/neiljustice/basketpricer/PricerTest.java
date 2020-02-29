@@ -5,7 +5,7 @@ import com.github.neiljustice.basketpricer.basket.StandardItem;
 import com.github.neiljustice.basketpricer.basket.Item;
 import com.github.neiljustice.basketpricer.basket.WeightedItem;
 import com.github.neiljustice.basketpricer.offers.Offer;
-import com.github.neiljustice.basketpricer.offers.StaticDiscountOffer;
+import com.github.neiljustice.basketpricer.offers.types.StaticDiscountOffer;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -76,7 +76,7 @@ class PricerTest {
                 new StandardItem("Peas", new BigDecimal("0.30"))
         ), Arrays.asList(
                 new StaticDiscountOffer(new BigDecimal("0.50"), "Beans"),
-                new StaticDiscountOffer(new BigDecimal("1.50"), "Bananas")
+                new StaticDiscountOffer(new BigDecimal("1.50"), "Peas")
         ));
 
         assertPricing(res, new BigDecimal("4.80"), new BigDecimal("2.00"), new BigDecimal("2.80"));

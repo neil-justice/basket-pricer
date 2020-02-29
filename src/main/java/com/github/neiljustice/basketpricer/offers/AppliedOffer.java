@@ -12,6 +12,10 @@ public class AppliedOffer {
         this.isApplicable = isApplicable;
     }
 
+    public static AppliedOffer NotApplicable() {
+        return new AppliedOffer(BigDecimal.ZERO, false);
+    }
+
     public BigDecimal getSavings() {
         return savings;
     }

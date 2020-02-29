@@ -26,7 +26,7 @@ public class Pricer {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         final BigDecimal savings = offers.stream()
-                .map(offer -> offer.applyOffer(basket.getItems()))
+                .map(offer -> offer.applyOffer(basket))
                 .filter(AppliedOffer::isApplicable)
                 .map(AppliedOffer::getSavings)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);

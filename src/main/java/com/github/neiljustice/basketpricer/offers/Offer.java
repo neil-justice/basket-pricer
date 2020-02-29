@@ -1,10 +1,8 @@
 package com.github.neiljustice.basketpricer.offers;
 
-import com.github.neiljustice.basketpricer.basket.Item;
-
-import java.util.Collection;
+import com.github.neiljustice.basketpricer.basket.Basket;
 
 public interface Offer {
 
-    AppliedOffer applyOffer(Collection<Item> items);
+    AppliedOffer applyOffer(Basket basket);
 }
