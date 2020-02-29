@@ -6,14 +6,23 @@ import com.github.neiljustice.basketpricer.offers.AppliedOffer;
 import com.github.neiljustice.basketpricer.offers.Offer;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class Pricer {
 
     private final List<Offer> offers;
 
-    public Pricer(List<Offer> offers) {
-        this.offers = offers;
+    private final PricingInfo pricingInfo;
+
+    public Pricer(List<Offer> offers, PricingInfo pricingInfo) {
+        this.offers = Objects.requireNonNull(offers);
+        this.pricingInfo = Objects.requireNonNull(pricingInfo);
+
+        for (Offer offer : this.offers) {
+            offer.validate(pricingInfo);
+        }
     }
 
     public BasketPricing priceBasket(Basket basket) {
@@ -26,7 +35,7 @@ public class Pricer {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         final BigDecimal savings = offers.stream()
-                .map(offer -> offer.applyOffer(basket))
+                .map(offer -> offer.apply(basket))
                 .filter(AppliedOffer::isApplicable)
                 .map(AppliedOffer::getSavings)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);

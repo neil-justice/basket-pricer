@@ -6,7 +6,7 @@ import java.util.Currency;
 /**
  * Static helper class to keep currency information in one place and enable easily
  * changing the currency and rounding mode used across the application.
- *
+ * <p>
  * This could eventually be read from a properties file or database.
  */
 public final class CurrencyConfiguration {

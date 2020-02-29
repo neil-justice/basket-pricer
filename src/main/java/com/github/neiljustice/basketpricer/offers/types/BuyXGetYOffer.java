@@ -2,6 +2,7 @@ package com.github.neiljustice.basketpricer.offers.types;
 
 import com.github.neiljustice.basketpricer.basket.Basket;
 import com.github.neiljustice.basketpricer.basket.Item;
+import com.github.neiljustice.basketpricer.PricingInfo;
 import com.github.neiljustice.basketpricer.offers.AppliedOffer;
 import com.github.neiljustice.basketpricer.offers.Offer;
 import com.github.neiljustice.basketpricer.offers.OfferException;
@@ -37,7 +38,7 @@ public class BuyXGetYOffer implements Offer {
     }
 
     @Override
-    public AppliedOffer applyOffer(Basket basket) {
+    public AppliedOffer apply(Basket basket) {
         int amountBought = 0;
         BigDecimal pricePer = BigDecimal.ZERO;
 
@@ -55,6 +56,14 @@ public class BuyXGetYOffer implements Offer {
             final BigDecimal savings = pricePer.multiply(new BigDecimal(timesToApply))
                     .multiply(new BigDecimal(amountToBuy - amountToPayFor));
             return new AppliedOffer(savings, true);
+        }
+    }
+
+    @Override
+    public void validate(PricingInfo pricingInfo) {
+        // Assumes these sort of deals do not make sense for items priced by weight
+        if (!pricingInfo.getPrice(itemName).isPresent()) {
+            throw new OfferException("Could not find item " + itemName);
         }
     }
 }

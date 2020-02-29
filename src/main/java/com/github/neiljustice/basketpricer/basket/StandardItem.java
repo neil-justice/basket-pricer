@@ -12,7 +12,7 @@ public class StandardItem implements Item {
 
     private final BigDecimal price;
 
-    public StandardItem(String name, BigDecimal price) {
+    protected StandardItem(String name, BigDecimal price) {
         this.name = name;
         this.price = CurrencyConfiguration.scale(price);
     }

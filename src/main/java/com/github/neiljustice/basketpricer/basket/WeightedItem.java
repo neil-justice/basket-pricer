@@ -15,7 +15,7 @@ public class WeightedItem implements Item {
 
     private final BigDecimal weightInKilos;
 
-    public WeightedItem(String name, BigDecimal pricePerKilo, BigDecimal weightInKilos) {
+    protected WeightedItem(String name, BigDecimal pricePerKilo, BigDecimal weightInKilos) {
         this.name = name;
         this.pricePerKilo = CurrencyConfiguration.scale(pricePerKilo);
         this.weightInKilos = weightInKilos;
@@ -29,5 +29,13 @@ public class WeightedItem implements Item {
     @Override
     public BigDecimal getPrice() {
         return CurrencyConfiguration.scale(pricePerKilo.multiply(weightInKilos));
+    }
+
+    public BigDecimal getPricePerKilo() {
+        return pricePerKilo;
+    }
+
+    public BigDecimal getWeightInKilos() {
+        return weightInKilos;
     }
 }
