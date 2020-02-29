@@ -1,7 +1,9 @@
 package com.github.neiljustice.basketpricer;
 
 import com.github.neiljustice.basketpricer.basket.Basket;
+import com.github.neiljustice.basketpricer.basket.StandardItem;
 import com.github.neiljustice.basketpricer.basket.Item;
+import com.github.neiljustice.basketpricer.basket.WeightedItem;
 import com.github.neiljustice.basketpricer.offers.Offer;
 import com.github.neiljustice.basketpricer.offers.StaticDiscountOffer;
 import org.junit.jupiter.api.Test;
@@ -36,7 +38,7 @@ class PricerTest {
     @Test
     void shouldPriceOneItemCorrectly() {
         BasketPricing res = getPricing(Collections.singletonList(
-                new Item("Beans", new BigDecimal("1.50"))
+                new StandardItem("Beans", new BigDecimal("1.50"))
         ), Collections.emptyList());
 
         assertPricing(res, new BigDecimal("1.50"), BigDecimal.ZERO, new BigDecimal("1.50"));
@@ -44,11 +46,10 @@ class PricerTest {
 
     @Test
     void shouldPriceManyItemsCorrectly() {
-
         BasketPricing res = getPricing(Arrays.asList(
-                new Item("Beans", new BigDecimal("1.50")),
-                new Item("Bananas", new BigDecimal("3.00")),
-                new Item("Peas", new BigDecimal("0.30"))
+                new StandardItem("Beans", new BigDecimal("1.50")),
+                new WeightedItem("Bananas", new BigDecimal("1.00"), new BigDecimal("3.000")),
+                new StandardItem("Peas", new BigDecimal("0.30"))
         ), Collections.emptyList());
 
         assertPricing(res, new BigDecimal("4.80"), BigDecimal.ZERO, new BigDecimal("4.80"));
@@ -57,14 +58,28 @@ class PricerTest {
     @Test
     void shouldApplyOneOffer() {
         BasketPricing res = getPricing(Arrays.asList(
-                new Item("Beans", new BigDecimal("1.50")),
-                new Item("Bananas", new BigDecimal("3.00")),
-                new Item("Peas", new BigDecimal("0.30"))
+                new StandardItem("Beans", new BigDecimal("1.50")),
+                new WeightedItem("Bananas", new BigDecimal("1.00"), new BigDecimal("3.000")),
+                new StandardItem("Peas", new BigDecimal("0.30"))
         ), Collections.singletonList(
                 new StaticDiscountOffer(new BigDecimal("0.50"), "Beans")
         ));
 
         assertPricing(res, new BigDecimal("4.80"), new BigDecimal("0.50"), new BigDecimal("4.30"));
+    }
+
+    @Test
+    void shouldApplyManyOffers() {
+        BasketPricing res = getPricing(Arrays.asList(
+                new StandardItem("Beans", new BigDecimal("1.50")),
+                new WeightedItem("Bananas", new BigDecimal("1.00"), new BigDecimal("3.000")),
+                new StandardItem("Peas", new BigDecimal("0.30"))
+        ), Arrays.asList(
+                new StaticDiscountOffer(new BigDecimal("0.50"), "Beans"),
+                new StaticDiscountOffer(new BigDecimal("1.50"), "Bananas")
+        ));
+
+        assertPricing(res, new BigDecimal("4.80"), new BigDecimal("2.00"), new BigDecimal("2.80"));
     }
 
     private BasketPricing getPricing(List<Item> items, List<Offer> offers) {

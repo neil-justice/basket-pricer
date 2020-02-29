@@ -1,5 +1,6 @@
 package com.github.neiljustice.basketpricer.offers;
 
+import com.github.neiljustice.basketpricer.CurrencyConfiguration;
 import com.github.neiljustice.basketpricer.basket.Item;
 
 import java.math.BigDecimal;
@@ -16,7 +17,7 @@ public class StaticDiscountOffer implements Offer {
     private final String itemName;
 
     public StaticDiscountOffer(BigDecimal discount, String itemName) {
-        this.discount = discount;
+        this.discount = CurrencyConfiguration.scale(discount);
         this.itemName = itemName;
     }
 
