@@ -3,7 +3,11 @@ package com.github.neiljustice.basketpricer.basket;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Basket {
     private final Map<String, BasketItem> items = new HashMap<>();
@@ -23,6 +27,13 @@ public class Basket {
 
     public BasketItem getItem(String name) {
         return items.get(name);
+    }
+
+    public List<BasketItem> getItems(Collection<String> names) {
+        return names.stream()
+                .map(items::get)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     public Collection<BasketItem> getItems() {

@@ -13,6 +13,7 @@ I wanted to represent offers and pricing rules that apply beyond individual item
 * Static discount: e.g. £3.00 off
 * Buy X get Y: e.g. 'buy one get one free', '3 for 5', '2 for the price of 3'.
 * Buy X for Y cost: e.g. '2 for £1.00', '3 for £3.00'
+* Any in set for X cost: e.g. 'Any 2 chocolate bars for £2.00'
 
 ### Considerations
 

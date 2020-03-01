@@ -33,6 +33,15 @@ class BuyXForYCostOfferTest {
         basketBuilder = new BasketBuilder(pricingInfo);
     }
 
+    @Test
+    void constructionShouldFailIfQuantityLessThan2() {
+        assertThrows(OfferException.class, () -> new BuyXForYCostOffer("Beans", 1, new BigDecimal("2.99")));
+    }
+
+    @Test
+    void constructionShouldFailIfPriceNotPositive() {
+        assertThrows(OfferException.class, () -> new BuyXForYCostOffer("Beans", 2, new BigDecimal("-2.99")));
+    }
 
     @Test
     void ShouldNotApplyToOtherItemTypes() {
