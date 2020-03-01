@@ -11,19 +11,20 @@ import com.github.neiljustice.basketpricer.offers.OfferException;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
 public class AnyInSetForXOffer implements Offer {
 
-    private final Collection<String> itemNames;
+    protected final List<String> itemNames;
 
     private final int quantity;
 
     private final BigDecimal price;
 
-    public AnyInSetForXOffer(Collection<String> itemNames, int quantity, BigDecimal price) {
+    public AnyInSetForXOffer(List<String> itemNames, int quantity, BigDecimal price) {
         this.itemNames = Objects.requireNonNull(itemNames);
         this.quantity = quantity;
         this.price = Objects.requireNonNull(price);
@@ -96,5 +97,17 @@ public class AnyInSetForXOffer implements Offer {
                 throw new OfferException("Offer cannot be applied to items priced by weight");
             }
         }
+    }
+
+    public List<String> getItemNames() {
+        return Collections.unmodifiableList(itemNames);
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
     }
 }
