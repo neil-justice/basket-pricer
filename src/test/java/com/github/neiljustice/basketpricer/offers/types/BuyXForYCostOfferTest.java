@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class BuyXGetYOfferTest {
+class BuyXForYCostOfferTest {
 
     private PricingInfo pricingInfo;
 
@@ -33,24 +33,10 @@ class BuyXGetYOfferTest {
         basketBuilder = new BasketBuilder(pricingInfo);
     }
 
-    @Test
-    void constructionShouldFailIfAmountToBuyIsLessThanAmountToPayFor() {
-        assertThrows(OfferException.class, () -> new BuyXGetYOffer(1, 2, "Beans"));
-    }
-
-    @Test
-    void constructionShouldFailIfAmountToBuyIsEqualToPayFor() {
-        assertThrows(OfferException.class, () -> new BuyXGetYOffer(1, 1, "Beans"));
-    }
-
-    @Test
-    void constructionShouldFailIfAmountToPayForLessThan1() {
-        assertThrows(OfferException.class, () -> new BuyXGetYOffer(1, 0, "Beans"));
-    }
 
     @Test
     void ShouldNotApplyToOtherItemTypes() {
-        Offer offer = new BuyXGetYOffer(2, 1, "Bread");
+        Offer offer = new BuyXForYCostOffer("Bread", 2, new BigDecimal("1.00"));
         Basket basket = basketBuilder.withItem("Beans", 4).build();
         AppliedOffer res = offer.apply(basket);
         assertFalse(res.isApplicable());
@@ -59,7 +45,7 @@ class BuyXGetYOfferTest {
 
     @Test
     void ShouldNotApplyIfLessThanXBought() {
-        Offer offer = new BuyXGetYOffer(5, 2, "Beans");
+        Offer offer = new BuyXForYCostOffer("Beans", 5, new BigDecimal("3.00"));
         Basket basket = basketBuilder.withItem("Beans", 4).build();
         AppliedOffer res = offer.apply(basket);
         assertFalse(res.isApplicable());
@@ -67,59 +53,53 @@ class BuyXGetYOfferTest {
     }
 
     @Test
-    void BuyOneGetOneFreeShouldWork() {
-        Offer offer = new BuyXGetYOffer(2, 1, "Beans");
-        Basket basket = basketBuilder.withItem("Beans", 2).build();
-        AppliedOffer res = offer.apply(basket);
-        assertTrue(res.isApplicable());
-        assertEquals(res.getSavings(), new BigDecimal("1.50"));
-    }
-
-    @Test
-    void BuyOneGetOneFreeShouldApplyTwice() {
-        Offer offer = new BuyXGetYOffer(2, 1, "Beans");
-        Basket basket = basketBuilder.withItem("Beans", 4).build();
-        AppliedOffer res = offer.apply(basket);
-        assertTrue(res.isApplicable());
-        assertEquals(res.getSavings(), new BigDecimal("3.00"));
-    }
-
-    @Test
-    void BuyOneGetOneFreeShouldIgnoreLeftovers() {
-        Offer offer = new BuyXGetYOffer(2, 1, "Beans");
+    void ShouldApplyIfXBought() {
+        Offer offer = new BuyXForYCostOffer("Beans", 5, new BigDecimal("3.00"));
         Basket basket = basketBuilder.withItem("Beans", 5).build();
         AppliedOffer res = offer.apply(basket);
         assertTrue(res.isApplicable());
-        assertEquals(res.getSavings(), new BigDecimal("3.00"));
+        assertEquals(res.getSavings(), new BigDecimal("4.50"));
     }
 
     @Test
-    void ThreeForTwoShouldWork() {
-        Offer offer = new BuyXGetYOffer(3, 2, "Beans");
-        Basket basket = basketBuilder.withItem("Beans", 3).build();
+    void ShouldNotApplyToLeftoversIfXPlus1Bought() {
+        Offer offer = new BuyXForYCostOffer("Beans", 5, new BigDecimal("3.00"));
+        Basket basket = basketBuilder.withItem("Beans", 6).build();
         AppliedOffer res = offer.apply(basket);
         assertTrue(res.isApplicable());
-        assertEquals(res.getSavings(), new BigDecimal("1.50"));
+        assertEquals(res.getSavings(), new BigDecimal("4.50"));
     }
 
     @Test
-    void FiveForThreeShouldWork() {
-        Offer offer = new BuyXGetYOffer(5, 3, "Beans");
-        Basket basket = basketBuilder.withItem("Beans", 5).build();
+    void ShouldApplyTwiceIf2XBought() {
+        Offer offer = new BuyXForYCostOffer("Beans", 5, new BigDecimal("3.00"));
+        Basket basket = basketBuilder.withItem("Beans", 10).build();
         AppliedOffer res = offer.apply(basket);
         assertTrue(res.isApplicable());
-        assertEquals(res.getSavings(), new BigDecimal("3.00"));
+        assertEquals(res.getSavings(), new BigDecimal("9.00"));
     }
 
     @Test
     void validateShouldNotAllowDiscountOnUnknownProduct() {
-        Offer offer = new BuyXGetYOffer(2, 1, "Beans 2.0");
+        Offer offer = new BuyXForYCostOffer("Nonexistent Item", 3, new BigDecimal("2.00"));
         assertThrows(OfferException.class, () -> offer.validate(pricingInfo));
     }
 
     @Test
     void validateShouldNotAllowDiscountOnProductPricedByWeight() {
-        Offer offer = new BuyXGetYOffer(2, 1, "Onions");
+        Offer offer = new BuyXForYCostOffer("Onions", 3, new BigDecimal("2.00"));
+        assertThrows(OfferException.class, () -> offer.validate(pricingInfo));
+    }
+
+    @Test
+    void validateShouldNotAllowDiscountWhichIncreasesPrice() {
+        Offer offer = new BuyXForYCostOffer("Beans", 3, new BigDecimal("6.00"));
+        assertThrows(OfferException.class, () -> offer.validate(pricingInfo));
+    }
+
+    @Test
+    void validateShouldNotAllowDiscountSameAsPrice() {
+        Offer offer = new BuyXForYCostOffer("Beans", 3, new BigDecimal("4.50"));
         assertThrows(OfferException.class, () -> offer.validate(pricingInfo));
     }
 }

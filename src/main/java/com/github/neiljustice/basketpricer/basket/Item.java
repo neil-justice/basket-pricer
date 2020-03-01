@@ -2,9 +2,29 @@ package com.github.neiljustice.basketpricer.basket;
 
 import java.math.BigDecimal;
 
-public interface Item {
+public class Item {
 
-    String getName();
+    private final String name;
 
-    BigDecimal getPrice();
+    private final BigDecimal pricePer;
+
+    private final PricingUnit pricingUnit;
+
+    public Item(String name, BigDecimal pricePer, PricingUnit pricingUnit) {
+        this.name = name;
+        this.pricePer = pricePer;
+        this.pricingUnit = pricingUnit;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public BigDecimal getPricePer() {
+        return pricePer;
+    }
+
+    public PricingUnit getPricingUnit() {
+        return pricingUnit;
+    }
 }

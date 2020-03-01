@@ -3,43 +3,50 @@ package com.github.neiljustice.basketpricer.basket;
 import com.github.neiljustice.basketpricer.PricingInfo;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 
 public class BasketBuilder {
     private final PricingInfo pricingInfo;
 
-    private final Basket basket = new Basket(new ArrayList<>());
+    private final Basket basket = new Basket();
 
     public BasketBuilder(PricingInfo pricingInfo) {
         this.pricingInfo = pricingInfo;
     }
 
     public BasketBuilder withItem(String name) {
-        pricingInfo.getPrice(name).ifPresent(price -> {
-            basket.getItems().add(new StandardItem(name, price));
-        });
-        return this;
+        return withItem(name, 1);
     }
 
     public BasketBuilder withItem(String name, int quantity) {
-        for (int i = 0; i < quantity; i++) {
-            withItem(name);
+        final Item item = pricingInfo.getItem(name);
+        if (item == null) {
+            throw new ItemException("Tried to add un-stocked item: " + name);
         }
+        if (item.getPricingUnit() != PricingUnit.PER_ITEM) {
+            throw new ItemException("Tried to add unit quantity of weight-priced item: " + name);
+        }
+        final BasketItem existing = basket.getItem(name);
+        if (existing != null) {
+            quantity += existing.getQuantity().intValueExact();
+        }
+        basket.addItem(new BasketItem(item, new BigDecimal(quantity)));
         return this;
     }
 
-    public BasketBuilder withItem(String name, BigDecimal weight) {
-        pricingInfo.getPricePerKilo(name).ifPresent(pricePerKilo -> {
-            basket.getItems().add(new WeightedItem(name, pricePerKilo, weight));
-        });
-        return this;
-    }
-
-    public BasketBuilder withItems(String... names) {
-        for (String name : names) {
-            withItem(name);
+    public BasketBuilder withItemByWeight(String name, BigDecimal quantity) {
+        final Item item = pricingInfo.getItem(name);
+        if (item == null) {
+            throw new ItemException("Tried to add un-stocked item: " + name);
+        }
+        if (item.getPricingUnit() != PricingUnit.PER_KILOGRAM_WEIGHT) {
+            throw new ItemException("Tried to add decimal quantity of unit-priced item: " + name);
+        }
+        final BasketItem existing = basket.getItem(name);
+        if (existing != null) {
+            quantity = existing.getQuantity().add(quantity);
         }
 
+        basket.addItem(new BasketItem(item, quantity));
         return this;
     }
 

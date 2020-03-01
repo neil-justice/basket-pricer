@@ -1,15 +1,32 @@
 package com.github.neiljustice.basketpricer.basket;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Basket {
-    private final Collection<Item> items;
+    private final Map<String, BasketItem> items = new HashMap<>();
 
-    public Basket(Collection<Item> items) {
-        this.items = items;
+    /**
+     * Use {@link BasketBuilder} to construct instances.
+     */
+    protected Basket() {
     }
 
-    public Collection<Item> getItems() {
-        return items;
+    /**
+     * Use {@link BasketBuilder} to add items.
+     */
+    protected void addItem(BasketItem item) {
+        items.put(item.getName(), item);
     }
+
+    public BasketItem getItem(String name) {
+        return items.get(name);
+    }
+
+    public Collection<BasketItem> getItems() {
+        return Collections.unmodifiableCollection(items.values());
+    }
+
 }

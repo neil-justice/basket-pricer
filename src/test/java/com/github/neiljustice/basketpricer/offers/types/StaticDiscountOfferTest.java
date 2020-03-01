@@ -1,8 +1,9 @@
 package com.github.neiljustice.basketpricer.offers.types;
 
+import com.github.neiljustice.basketpricer.PricingInfo;
 import com.github.neiljustice.basketpricer.basket.Basket;
 import com.github.neiljustice.basketpricer.basket.BasketBuilder;
-import com.github.neiljustice.basketpricer.PricingInfo;
+import com.github.neiljustice.basketpricer.basket.PricingUnit;
 import com.github.neiljustice.basketpricer.offers.AppliedOffer;
 import com.github.neiljustice.basketpricer.offers.Offer;
 import com.github.neiljustice.basketpricer.offers.OfferException;
@@ -11,7 +12,10 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class StaticDiscountOfferTest {
 
@@ -22,8 +26,8 @@ class StaticDiscountOfferTest {
     @BeforeEach
     void setUp() {
         pricingInfo = new PricingInfo();
-        pricingInfo.registerItem("Beans", new BigDecimal("1.50"));
-        pricingInfo.registerItem("Bread", new BigDecimal("1.76"));
+        pricingInfo.registerItem("Beans", new BigDecimal("1.50"), PricingUnit.PER_ITEM);
+        pricingInfo.registerItem("Bread", new BigDecimal("1.76"), PricingUnit.PER_ITEM);
 
         basketBuilder = new BasketBuilder(pricingInfo);
     }

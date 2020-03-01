@@ -13,29 +13,26 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
- * BuyXGetYOffer can represent offers such as 'buy one get one free', or '3 for the price of 2'.
+ * BuyXForYCostOffer can represent offers like '2 for £1'
  */
-public class BuyXGetYOffer implements Offer {
-    private final int amountToBuy;
-
-    private final int amountToPayFor;
+public class BuyXForYCostOffer implements Offer {
 
     private final String itemName;
 
-    public BuyXGetYOffer(int amountToBuy, int amountToPayFor, String itemName) {
-        this.amountToBuy = amountToBuy;
-        this.amountToPayFor = amountToPayFor;
-        this.itemName = Objects.requireNonNull(itemName);
+    private final int quantity;
 
-        if (amountToBuy <= amountToPayFor) {
-            throw new OfferException(String.format(
-                    "Cannot create offer: amount to buy (%d) less than or equal to amount to pay for (%d)",
-                    amountToBuy, amountToPayFor));
+    private final BigDecimal price;
+
+    public BuyXForYCostOffer(String itemName, int quantity, BigDecimal price) {
+        this.itemName = Objects.requireNonNull(itemName);
+        this.quantity = quantity;
+        this.price = Objects.requireNonNull(price);
+
+        if (quantity < 2) {
+            throw new OfferException("Cannot create offer: quantity less than 2: " + quantity);
         }
-        if (amountToPayFor < 1) {
-            // I've assumed that we don't want to allow offers which give things away for free...
-            throw new OfferException(String.format("Cannot create offer: amount to pay for (%d) less than 1",
-                    amountToPayFor));
+        if (price.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new OfferException("Cannot create offer: price was not positive : " + price);
         }
     }
 
@@ -47,16 +44,16 @@ public class BuyXGetYOffer implements Offer {
         }
 
         final int amountBought = item.getQuantity().intValueExact();
-        if (amountBought < amountToBuy) {
+        if (amountBought < quantity) {
             return AppliedOffer.NotApplicable();
         }
 
-        final BigDecimal pricePer = item.getPricePer();
-        final int timesToApply = amountBought / amountToBuy;
-        final BigDecimal savings = pricePer
+        final int timesToApply = amountBought / quantity;
+        final int leftover = amountBought % quantity;
+        final BigDecimal totalCost = price
                 .multiply(new BigDecimal(timesToApply))
-                .multiply(new BigDecimal(amountToBuy - amountToPayFor));
-        return new AppliedOffer(savings, true);
+                .add(new BigDecimal(leftover).multiply(item.getPricePer()));
+        return new AppliedOffer(item.getPrice().subtract(totalCost), true);
     }
 
     @Override
@@ -67,6 +64,12 @@ public class BuyXGetYOffer implements Offer {
         }
         if (item.getPricingUnit() != PricingUnit.PER_ITEM) {
             throw new OfferException("Offer cannot be applied to items priced by weight");
+        }
+        final BigDecimal priceWithoutDeal = item.getPricePer().multiply(new BigDecimal(quantity));
+        if (price.compareTo(priceWithoutDeal) >= 0) {
+            throw new OfferException(String.format(
+                    "Discounted price (%.2f) was equal to or larger than cost without deal %.2f: ",
+                    price, priceWithoutDeal));
         }
     }
 }
