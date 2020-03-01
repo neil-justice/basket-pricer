@@ -40,7 +40,7 @@ public class StaticDiscountOffer implements Offer {
 
         final int quantity = item.getQuantity().intValueExact();
         if (quantity > 0) {
-            return new AppliedOffer(discount.multiply(new BigDecimal(quantity)), true);
+            return new AppliedOffer(generateOfferName(), discount.multiply(new BigDecimal(quantity)), true);
         } else {
             return AppliedOffer.NotApplicable();
         }
@@ -58,5 +58,9 @@ public class StaticDiscountOffer implements Offer {
         if (item.getPricingUnit() != PricingUnit.PER_ITEM) {
             throw new OfferException("Offer cannot be applied to items priced by weight");
         }
+    }
+
+    private String generateOfferName() {
+        return String.format("%s%.2f off %s", CurrencyConfiguration.getSymbol(), discount, itemName);
     }
 }

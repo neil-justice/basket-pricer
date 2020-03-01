@@ -56,7 +56,7 @@ public class BuyXGetYOffer implements Offer {
         final BigDecimal savings = pricePer
                 .multiply(new BigDecimal(timesToApply))
                 .multiply(new BigDecimal(amountToBuy - amountToPayFor));
-        return new AppliedOffer(savings, true);
+        return new AppliedOffer(generateOfferName(), savings, true);
     }
 
     @Override
@@ -68,5 +68,9 @@ public class BuyXGetYOffer implements Offer {
         if (item.getPricingUnit() != PricingUnit.PER_ITEM) {
             throw new OfferException("Offer cannot be applied to items priced by weight");
         }
+    }
+
+    private String generateOfferName() {
+        return String.format("%d %s for the price of %d", amountToBuy, itemName, amountToPayFor);
     }
 }

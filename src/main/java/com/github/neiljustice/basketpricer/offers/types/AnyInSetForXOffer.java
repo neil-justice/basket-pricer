@@ -1,5 +1,6 @@
 package com.github.neiljustice.basketpricer.offers.types;
 
+import com.github.neiljustice.basketpricer.CurrencyConfiguration;
 import com.github.neiljustice.basketpricer.ItemInfo;
 import com.github.neiljustice.basketpricer.basket.Basket;
 import com.github.neiljustice.basketpricer.basket.BasketItem;
@@ -17,7 +18,7 @@ import java.util.Objects;
 
 public class AnyInSetForXOffer implements Offer {
 
-    protected final List<String> itemNames;
+    private final List<String> itemNames;
 
     private final int quantity;
 
@@ -60,7 +61,7 @@ public class AnyInSetForXOffer implements Offer {
                 .map(BasketItem::getPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        return new AppliedOffer(costPreOffer.subtract(costOfItemsInOffer).subtract(leftoverCost), true);
+        return new AppliedOffer(generateOfferName(), costPreOffer.subtract(costOfItemsInOffer).subtract(leftoverCost), true);
     }
 
     /**
@@ -96,6 +97,10 @@ public class AnyInSetForXOffer implements Offer {
                 throw new OfferException("Offer cannot be applied to items priced by weight");
             }
         }
+    }
+
+    protected String generateOfferName() {
+        return String.format("Any %d for %s%.2f", quantity, CurrencyConfiguration.getSymbol(), price);
     }
 
     public List<String> getItemNames() {

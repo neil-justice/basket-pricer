@@ -29,6 +29,10 @@ public final class CurrencyConfiguration {
         return currency.getDefaultFractionDigits();
     }
 
+    public static String getSymbol() {
+        return currency.getSymbol();
+    }
+
     public static BigDecimal scale(BigDecimal cost) {
         return cost.setScale(
                 CurrencyConfiguration.getDecimalPlaces(),

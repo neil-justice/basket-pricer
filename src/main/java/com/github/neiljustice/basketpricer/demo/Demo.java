@@ -22,6 +22,7 @@ public class Demo {
      * This example is taken from the exercise instructions.
      */
     public void example1() {
+        System.out.println("Example 1:");
         final ItemInfo itemInfo = new ItemInfo();
         itemInfo.registerItem("Beans", new BigDecimal("0.50"), PricingUnit.PER_ITEM);
         itemInfo.registerItem("Coca-Cola", new BigDecimal("0.70"), PricingUnit.PER_ITEM);
@@ -46,6 +47,7 @@ public class Demo {
      * This example is taken from a real offer found in an online supermarket.
      */
     public void example2() {
+        System.out.println("Example 2:");
         final ItemInfo itemInfo = new ItemInfo();
         itemInfo.registerItem("Watercress, Rocket & Spinach Salad", new BigDecimal("2.00"), PricingUnit.PER_ITEM);
         itemInfo.registerItem("Earthy Beetroot Salad", new BigDecimal("2.00"), PricingUnit.PER_ITEM);
