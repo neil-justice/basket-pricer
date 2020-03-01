@@ -1,6 +1,6 @@
 package com.github.neiljustice.basketpricer.offers.types;
 
-import com.github.neiljustice.basketpricer.PricingInfo;
+import com.github.neiljustice.basketpricer.ItemInfo;
 import com.github.neiljustice.basketpricer.basket.Item;
 import com.github.neiljustice.basketpricer.offers.OfferException;
 
@@ -19,10 +19,10 @@ public class BuyXForYCostOffer extends AnyInSetForXOffer {
     }
 
     @Override
-    public void validate(PricingInfo pricingInfo) {
-        super.validate(pricingInfo);
+    public void validate(ItemInfo itemInfo) {
+        super.validate(itemInfo);
         final String itemName = itemNames.get(0);
-        Item item = pricingInfo.getItem(itemName);
+        Item item = itemInfo.getItem(itemName);
         final BigDecimal priceWithoutDeal = item.getPricePer().multiply(new BigDecimal(getQuantity()));
         if (getPrice().compareTo(priceWithoutDeal) >= 0) {
             throw new OfferException(String.format(

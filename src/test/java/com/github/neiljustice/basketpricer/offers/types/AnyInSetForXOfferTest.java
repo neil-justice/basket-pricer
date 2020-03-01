@@ -1,6 +1,6 @@
 package com.github.neiljustice.basketpricer.offers.types;
 
-import com.github.neiljustice.basketpricer.PricingInfo;
+import com.github.neiljustice.basketpricer.ItemInfo;
 import com.github.neiljustice.basketpricer.basket.Basket;
 import com.github.neiljustice.basketpricer.basket.BasketBuilder;
 import com.github.neiljustice.basketpricer.basket.PricingUnit;
@@ -18,22 +18,22 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AnyInSetForXOfferTest {
 
-    private PricingInfo pricingInfo;
+    private ItemInfo itemInfo;
 
     private BasketBuilder basketBuilder;
 
     @BeforeEach
     void setUp() {
-        pricingInfo = new PricingInfo();
-        pricingInfo.registerItem("Ale 1", new BigDecimal("1.51"), PricingUnit.PER_ITEM);
-        pricingInfo.registerItem("Ale 2", new BigDecimal("1.76"), PricingUnit.PER_ITEM);
-        pricingInfo.registerItem("Ale 3", new BigDecimal("1.55"), PricingUnit.PER_ITEM);
-        pricingInfo.registerItem("Expensive Ale", new BigDecimal("2.45"), PricingUnit.PER_ITEM);
-        pricingInfo.registerItem("Cheap Ale", new BigDecimal("1.05"), PricingUnit.PER_ITEM);
-        pricingInfo.registerItem("Beans", new BigDecimal("1.50"), PricingUnit.PER_ITEM);
-        pricingInfo.registerItem("Potatoes", new BigDecimal("1.31"), PricingUnit.PER_KILOGRAM_WEIGHT);
+        itemInfo = new ItemInfo();
+        itemInfo.registerItem("Ale 1", new BigDecimal("1.51"), PricingUnit.PER_ITEM);
+        itemInfo.registerItem("Ale 2", new BigDecimal("1.76"), PricingUnit.PER_ITEM);
+        itemInfo.registerItem("Ale 3", new BigDecimal("1.55"), PricingUnit.PER_ITEM);
+        itemInfo.registerItem("Expensive Ale", new BigDecimal("2.45"), PricingUnit.PER_ITEM);
+        itemInfo.registerItem("Cheap Ale", new BigDecimal("1.05"), PricingUnit.PER_ITEM);
+        itemInfo.registerItem("Beans", new BigDecimal("1.50"), PricingUnit.PER_ITEM);
+        itemInfo.registerItem("Potatoes", new BigDecimal("1.31"), PricingUnit.PER_KILOGRAM_WEIGHT);
 
-        basketBuilder = new BasketBuilder(pricingInfo);
+        basketBuilder = new BasketBuilder(itemInfo);
     }
 
     @Test
@@ -147,12 +147,12 @@ class AnyInSetForXOfferTest {
     @Test
     void validateShouldNotAllowDiscountOnUnknownProduct() {
         Offer offer = new AnyInSetForXOffer(Arrays.asList("Ale 1", "Nonexistent Ale"), 3, new BigDecimal("2.00"));
-        assertThrows(OfferException.class, () -> offer.validate(pricingInfo));
+        assertThrows(OfferException.class, () -> offer.validate(itemInfo));
     }
 
     @Test
     void validateShouldNotAllowDiscountOnProductPricedByWeight() {
         Offer offer = new AnyInSetForXOffer(Arrays.asList("Beans", "Potatoes"), 3, new BigDecimal("2.00"));
-        assertThrows(OfferException.class, () -> offer.validate(pricingInfo));
+        assertThrows(OfferException.class, () -> offer.validate(itemInfo));
     }
 }

@@ -1,16 +1,16 @@
 package com.github.neiljustice.basketpricer.basket;
 
-import com.github.neiljustice.basketpricer.PricingInfo;
+import com.github.neiljustice.basketpricer.ItemInfo;
 
 import java.math.BigDecimal;
 
 public class BasketBuilder {
-    private final PricingInfo pricingInfo;
+    private final ItemInfo itemInfo;
 
     private final Basket basket = new Basket();
 
-    public BasketBuilder(PricingInfo pricingInfo) {
-        this.pricingInfo = pricingInfo;
+    public BasketBuilder(ItemInfo itemInfo) {
+        this.itemInfo = itemInfo;
     }
 
     public BasketBuilder withItem(String name) {
@@ -18,7 +18,7 @@ public class BasketBuilder {
     }
 
     public BasketBuilder withItem(String name, int quantity) {
-        final Item item = pricingInfo.getItem(name);
+        final Item item = itemInfo.getItem(name);
         if (item == null) {
             throw new ItemException("Tried to add un-stocked item: " + name);
         }
@@ -33,8 +33,8 @@ public class BasketBuilder {
         return this;
     }
 
-    public BasketBuilder withItemByWeight(String name, BigDecimal quantity) {
-        final Item item = pricingInfo.getItem(name);
+    public BasketBuilder withItemByWeightKilos(String name, BigDecimal quantity) {
+        final Item item = itemInfo.getItem(name);
         if (item == null) {
             throw new ItemException("Tried to add un-stocked item: " + name);
         }

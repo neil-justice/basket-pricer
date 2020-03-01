@@ -1,6 +1,6 @@
 package com.github.neiljustice.basketpricer.offers.types;
 
-import com.github.neiljustice.basketpricer.PricingInfo;
+import com.github.neiljustice.basketpricer.ItemInfo;
 import com.github.neiljustice.basketpricer.basket.Basket;
 import com.github.neiljustice.basketpricer.basket.BasketBuilder;
 import com.github.neiljustice.basketpricer.basket.PricingUnit;
@@ -19,32 +19,32 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class StaticDiscountOfferTest {
 
-    private PricingInfo pricingInfo;
+    private ItemInfo itemInfo;
 
     private BasketBuilder basketBuilder;
 
     @BeforeEach
     void setUp() {
-        pricingInfo = new PricingInfo();
-        pricingInfo.registerItem("Beans", new BigDecimal("1.50"), PricingUnit.PER_ITEM);
-        pricingInfo.registerItem("Bread", new BigDecimal("1.76"), PricingUnit.PER_ITEM);
+        itemInfo = new ItemInfo();
+        itemInfo.registerItem("Beans", new BigDecimal("1.50"), PricingUnit.PER_ITEM);
+        itemInfo.registerItem("Bread", new BigDecimal("1.76"), PricingUnit.PER_ITEM);
 
-        basketBuilder = new BasketBuilder(pricingInfo);
+        basketBuilder = new BasketBuilder(itemInfo);
     }
 
     @Test
     void shouldFailToConstructNegativeDiscounts() {
-        assertThrows(OfferException.class, () -> new StaticDiscountOffer(new BigDecimal("-1.00"), "Bread"));
+        assertThrows(OfferException.class, () -> new StaticDiscountOffer("Bread", new BigDecimal("-1.00")));
     }
 
     @Test
     void shouldFailToConstructZeroDiscounts() {
-        assertThrows(OfferException.class, () -> new StaticDiscountOffer(new BigDecimal("0.00"), "Bread"));
+        assertThrows(OfferException.class, () -> new StaticDiscountOffer("Bread", new BigDecimal("0.00")));
     }
 
     @Test
     void shouldNotApplyIfItemNotPresent() {
-        Offer offer = new StaticDiscountOffer(new BigDecimal("0.50"), "Bread");
+        Offer offer = new StaticDiscountOffer("Bread", new BigDecimal("0.50"));
         Basket basket = basketBuilder.withItem("Beans", 4).build();
         AppliedOffer res = offer.apply(basket);
         assertFalse(res.isApplicable());
@@ -53,7 +53,7 @@ class StaticDiscountOfferTest {
 
     @Test
     void shouldApplyOnceIfItemPresentOnce() {
-        Offer offer = new StaticDiscountOffer(new BigDecimal("0.50"), "Bread");
+        Offer offer = new StaticDiscountOffer("Bread", new BigDecimal("0.50"));
         Basket basket = basketBuilder
                 .withItem("Beans", 3)
                 .withItem("Bread")
@@ -66,7 +66,7 @@ class StaticDiscountOfferTest {
 
     @Test
     void shouldApplyForEachItemPresent() {
-        Offer offer = new StaticDiscountOffer(new BigDecimal("0.50"), "Bread");
+        Offer offer = new StaticDiscountOffer("Bread", new BigDecimal("0.50"));
         Basket basket = basketBuilder
                 .withItem("Beans", 3)
                 .withItem("Bread", 4)
@@ -78,19 +78,19 @@ class StaticDiscountOfferTest {
 
     @Test
     void validateShouldNotAllowDiscountEqualToPrice() {
-        Offer offer = new StaticDiscountOffer(new BigDecimal("1.76"), "Bread");
-        assertThrows(OfferException.class, () -> offer.validate(pricingInfo));
+        Offer offer = new StaticDiscountOffer("Bread", new BigDecimal("1.76"));
+        assertThrows(OfferException.class, () -> offer.validate(itemInfo));
     }
 
     @Test
     void validateShouldNotAllowDiscountGreaterThanPrice() {
-        Offer offer = new StaticDiscountOffer(new BigDecimal("2.00"), "Bread");
-        assertThrows(OfferException.class, () -> offer.validate(pricingInfo));
+        Offer offer = new StaticDiscountOffer("Bread", new BigDecimal("2.00"));
+        assertThrows(OfferException.class, () -> offer.validate(itemInfo));
     }
 
     @Test
     void validateShouldNotAllowDiscountOnUnknownProduct() {
-        Offer offer = new StaticDiscountOffer(new BigDecimal("1.00"), "Fork Handles");
-        assertThrows(OfferException.class, () -> offer.validate(pricingInfo));
+        Offer offer = new StaticDiscountOffer("Fork Handles", new BigDecimal("1.00"));
+        assertThrows(OfferException.class, () -> offer.validate(itemInfo));
     }
 }

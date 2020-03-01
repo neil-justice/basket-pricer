@@ -26,4 +26,10 @@ public class BasketPricing {
     public BigDecimal getTotal() {
         return total;
     }
+
+    public void printSummary() {
+        System.out.printf("Sub-total: %.2f\n", preOffers);
+        System.out.printf("Total savings: %.2f\n", savings);
+        System.out.printf("Total to pay: %.2f\n", total);
+    }
 }

@@ -18,29 +18,29 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PricerTest {
 
-    private PricingInfo pricingInfo;
+    private ItemInfo itemInfo;
 
     private BasketBuilder basketBuilder;
 
     @BeforeEach
     void setUp() {
-        pricingInfo = new PricingInfo();
-        pricingInfo.registerItem("Beans", new BigDecimal("1.50"), PricingUnit.PER_ITEM);
-        pricingInfo.registerItem("Peas", new BigDecimal("0.30"), PricingUnit.PER_ITEM);
-        pricingInfo.registerItem("Bananas", new BigDecimal("1.00"), PricingUnit.PER_KILOGRAM_WEIGHT);
+        itemInfo = new ItemInfo();
+        itemInfo.registerItem("Beans", new BigDecimal("1.50"), PricingUnit.PER_ITEM);
+        itemInfo.registerItem("Peas", new BigDecimal("0.30"), PricingUnit.PER_ITEM);
+        itemInfo.registerItem("Bananas", new BigDecimal("1.00"), PricingUnit.PER_KILOGRAM_WEIGHT);
 
-        basketBuilder = new BasketBuilder(pricingInfo);
+        basketBuilder = new BasketBuilder(itemInfo);
     }
 
     @Test
     void shouldPriceNullBasketCorrectly() {
-        BasketPricing res = new Pricer(Collections.emptyList(), pricingInfo).priceBasket(null);
+        BasketPricing res = new Pricer(Collections.emptyList(), itemInfo).priceBasket(null);
         assertPricing(res, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
     }
 
     @Test
     void shouldHandleNullOffersCollectionCorrectly() {
-        assertThrows(NullPointerException.class, () -> new Pricer(null, pricingInfo));
+        assertThrows(NullPointerException.class, () -> new Pricer(null, itemInfo));
     }
 
     @Test
@@ -65,7 +65,7 @@ class PricerTest {
     void shouldPriceManyItemsCorrectly() {
         BasketPricing res = getPricing(basketBuilder
                 .withItem("Beans")
-                .withItemByWeight("Bananas", new BigDecimal("3.000"))
+                .withItemByWeightKilos("Bananas", new BigDecimal("3.000"))
                 .withItem("Peas")
                 .build(), Collections.emptyList());
 
@@ -76,10 +76,10 @@ class PricerTest {
     void shouldApplyOneOffer() {
         BasketPricing res = getPricing(basketBuilder
                 .withItem("Beans")
-                .withItemByWeight("Bananas", new BigDecimal("3.000"))
+                .withItemByWeightKilos("Bananas", new BigDecimal("3.000"))
                 .withItem("Peas")
                 .build(), Collections.singletonList(
-                new StaticDiscountOffer(new BigDecimal("0.50"), "Beans")
+                new StaticDiscountOffer("Beans", new BigDecimal("0.50"))
         ));
 
         assertPricing(res, new BigDecimal("4.80"), new BigDecimal("0.50"), new BigDecimal("4.30"));
@@ -89,18 +89,18 @@ class PricerTest {
     void shouldApplyManyOffers() {
         BasketPricing res = getPricing(basketBuilder
                 .withItem("Beans")
-                .withItemByWeight("Bananas", new BigDecimal("3.000"))
+                .withItemByWeightKilos("Bananas", new BigDecimal("3.000"))
                 .withItem("Peas")
                 .build(), Arrays.asList(
-                new StaticDiscountOffer(new BigDecimal("0.50"), "Beans"),
-                new StaticDiscountOffer(new BigDecimal("0.15"), "Peas")
+                new StaticDiscountOffer("Beans", new BigDecimal("0.50")),
+                new StaticDiscountOffer("Peas", new BigDecimal("0.15"))
         ));
 
         assertPricing(res, new BigDecimal("4.80"), new BigDecimal("0.65"), new BigDecimal("4.15"));
     }
 
     private BasketPricing getPricing(Basket basket, List<Offer> offers) {
-        return new Pricer(offers, pricingInfo).priceBasket(basket);
+        return new Pricer(offers, itemInfo).priceBasket(basket);
     }
 
     private void assertPricing(BasketPricing pricing, BigDecimal preOffers, BigDecimal savings, BigDecimal total) {

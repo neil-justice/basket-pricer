@@ -9,10 +9,10 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Represents the source of truth for the prices of items and the prices per kilo of
- * items sold by weight.  Would probably be replaced by a database in a real setup.
+ * Represents the source of truth for the properties of items (price per unit, unit of pricing, name).
+ * Would probably be replaced by a database in a real setup.
  */
-public class PricingInfo {
+public class ItemInfo {
     private final Map<String, Item> items = new HashMap<>();
 
     public void registerItem(String name, BigDecimal pricePer, PricingUnit pricingUnit) {

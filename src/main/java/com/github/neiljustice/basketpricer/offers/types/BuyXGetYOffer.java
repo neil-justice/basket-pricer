@@ -1,6 +1,6 @@
 package com.github.neiljustice.basketpricer.offers.types;
 
-import com.github.neiljustice.basketpricer.PricingInfo;
+import com.github.neiljustice.basketpricer.ItemInfo;
 import com.github.neiljustice.basketpricer.basket.Basket;
 import com.github.neiljustice.basketpricer.basket.BasketItem;
 import com.github.neiljustice.basketpricer.basket.Item;
@@ -22,7 +22,7 @@ public class BuyXGetYOffer implements Offer {
 
     private final String itemName;
 
-    public BuyXGetYOffer(int amountToBuy, int amountToPayFor, String itemName) {
+    public BuyXGetYOffer(String itemName, int amountToBuy, int amountToPayFor) {
         this.amountToBuy = amountToBuy;
         this.amountToPayFor = amountToPayFor;
         this.itemName = Objects.requireNonNull(itemName);
@@ -60,8 +60,8 @@ public class BuyXGetYOffer implements Offer {
     }
 
     @Override
-    public void validate(PricingInfo pricingInfo) {
-        Item item = pricingInfo.getItem(itemName);
+    public void validate(ItemInfo itemInfo) {
+        Item item = itemInfo.getItem(itemName);
         if (item == null) {
             throw new OfferException("Could not find item " + itemName);
         }

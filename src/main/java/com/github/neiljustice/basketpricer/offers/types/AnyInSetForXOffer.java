@@ -1,6 +1,6 @@
 package com.github.neiljustice.basketpricer.offers.types;
 
-import com.github.neiljustice.basketpricer.PricingInfo;
+import com.github.neiljustice.basketpricer.ItemInfo;
 import com.github.neiljustice.basketpricer.basket.Basket;
 import com.github.neiljustice.basketpricer.basket.BasketItem;
 import com.github.neiljustice.basketpricer.basket.Item;
@@ -10,7 +10,6 @@ import com.github.neiljustice.basketpricer.offers.Offer;
 import com.github.neiljustice.basketpricer.offers.OfferException;
 
 import java.math.BigDecimal;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -87,9 +86,9 @@ public class AnyInSetForXOffer implements Offer {
     }
 
     @Override
-    public void validate(PricingInfo pricingInfo) {
+    public void validate(ItemInfo itemInfo) {
         for (String name : itemNames) {
-            Item item = pricingInfo.getItem(name);
+            Item item = itemInfo.getItem(name);
             if (item == null) {
                 throw new OfferException("Could not find item " + name);
             }

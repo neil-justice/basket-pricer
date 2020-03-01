@@ -1,6 +1,6 @@
 package com.github.neiljustice.basketpricer.offers.types;
 
-import com.github.neiljustice.basketpricer.PricingInfo;
+import com.github.neiljustice.basketpricer.ItemInfo;
 import com.github.neiljustice.basketpricer.basket.Basket;
 import com.github.neiljustice.basketpricer.basket.BasketBuilder;
 import com.github.neiljustice.basketpricer.basket.PricingUnit;
@@ -19,18 +19,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BuyXForYCostOfferTest {
 
-    private PricingInfo pricingInfo;
+    private ItemInfo itemInfo;
 
     private BasketBuilder basketBuilder;
 
     @BeforeEach
     void setUp() {
-        pricingInfo = new PricingInfo();
-        pricingInfo.registerItem("Beans", new BigDecimal("1.50"), PricingUnit.PER_ITEM);
-        pricingInfo.registerItem("Bread", new BigDecimal("1.76"), PricingUnit.PER_ITEM);
-        pricingInfo.registerItem("Onions", new BigDecimal("0.45"), PricingUnit.PER_KILOGRAM_WEIGHT);
+        itemInfo = new ItemInfo();
+        itemInfo.registerItem("Beans", new BigDecimal("1.50"), PricingUnit.PER_ITEM);
+        itemInfo.registerItem("Bread", new BigDecimal("1.76"), PricingUnit.PER_ITEM);
+        itemInfo.registerItem("Onions", new BigDecimal("0.45"), PricingUnit.PER_KILOGRAM_WEIGHT);
 
-        basketBuilder = new BasketBuilder(pricingInfo);
+        basketBuilder = new BasketBuilder(itemInfo);
     }
 
     @Test
@@ -91,24 +91,24 @@ class BuyXForYCostOfferTest {
     @Test
     void validateShouldNotAllowDiscountOnUnknownProduct() {
         Offer offer = new BuyXForYCostOffer("Nonexistent Item", 3, new BigDecimal("2.00"));
-        assertThrows(OfferException.class, () -> offer.validate(pricingInfo));
+        assertThrows(OfferException.class, () -> offer.validate(itemInfo));
     }
 
     @Test
     void validateShouldNotAllowDiscountOnProductPricedByWeight() {
         Offer offer = new BuyXForYCostOffer("Onions", 3, new BigDecimal("2.00"));
-        assertThrows(OfferException.class, () -> offer.validate(pricingInfo));
+        assertThrows(OfferException.class, () -> offer.validate(itemInfo));
     }
 
     @Test
     void validateShouldNotAllowDiscountWhichIncreasesPrice() {
         Offer offer = new BuyXForYCostOffer("Beans", 3, new BigDecimal("6.00"));
-        assertThrows(OfferException.class, () -> offer.validate(pricingInfo));
+        assertThrows(OfferException.class, () -> offer.validate(itemInfo));
     }
 
     @Test
     void validateShouldNotAllowDiscountSameAsPrice() {
         Offer offer = new BuyXForYCostOffer("Beans", 3, new BigDecimal("4.50"));
-        assertThrows(OfferException.class, () -> offer.validate(pricingInfo));
+        assertThrows(OfferException.class, () -> offer.validate(itemInfo));
     }
 }

@@ -1,7 +1,7 @@
 package com.github.neiljustice.basketpricer.offers.types;
 
 import com.github.neiljustice.basketpricer.CurrencyConfiguration;
-import com.github.neiljustice.basketpricer.PricingInfo;
+import com.github.neiljustice.basketpricer.ItemInfo;
 import com.github.neiljustice.basketpricer.basket.Basket;
 import com.github.neiljustice.basketpricer.basket.BasketItem;
 import com.github.neiljustice.basketpricer.basket.Item;
@@ -22,7 +22,7 @@ public class StaticDiscountOffer implements Offer {
 
     private final String itemName;
 
-    public StaticDiscountOffer(BigDecimal discount, String itemName) {
+    public StaticDiscountOffer(String itemName, BigDecimal discount) {
         this.discount = CurrencyConfiguration.scale(Objects.requireNonNull(discount));
         this.itemName = Objects.requireNonNull(itemName);
 
@@ -47,8 +47,8 @@ public class StaticDiscountOffer implements Offer {
     }
 
     @Override
-    public void validate(PricingInfo pricingInfo) {
-        Item item = pricingInfo.getItem(itemName);
+    public void validate(ItemInfo itemInfo) {
+        Item item = itemInfo.getItem(itemName);
         if (item == null) {
             throw new OfferException("Could not find item " + itemName);
         }

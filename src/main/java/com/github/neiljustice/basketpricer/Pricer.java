@@ -13,14 +13,14 @@ public class Pricer {
 
     private final Collection<Offer> offers;
 
-    private final PricingInfo pricingInfo;
+    private final ItemInfo itemInfo;
 
-    public Pricer(Collection<Offer> offers, PricingInfo pricingInfo) {
+    public Pricer(Collection<Offer> offers, ItemInfo itemInfo) {
         this.offers = Objects.requireNonNull(offers);
-        this.pricingInfo = Objects.requireNonNull(pricingInfo);
+        this.itemInfo = Objects.requireNonNull(itemInfo);
 
         for (Offer offer : this.offers) {
-            offer.validate(pricingInfo);
+            offer.validate(itemInfo);
         }
     }
 
