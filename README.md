@@ -2,7 +2,9 @@
 
 A supermarket basket pricing tool, designed to handle a variety of pricing schemes and types of special offers.
 
-Made using Java 8 and Maven 3.6 as a build tool.
+Made using Java 8 and Maven 3.6 as a build tool in an Object-Oriented style.
+
+The `com.github.neiljustice.basketpricer.demo.Demo` main class is a good place to start to get a feel for how the program works.
 
 ### Usage
 
@@ -10,7 +12,7 @@ Run `mvn clean test` to run the unit tests.
 
 Run `mvn clean package` to build.
 
-Once built, run `java -jar target/basket-pricer-1.0-SNAPSHOT.jar ` to run the demo basket pricing. This includes 2 sample baskets being priced. The `com.github.neiljustice.basketpricer.demo.Demo` class is a good place to look to get a feel for how the program works.
+Once built, run `java -jar target/basket-pricer-1.0-SNAPSHOT.jar ` to run the demo basket pricing. This includes 2 sample baskets being priced.
 
 (all commands run from the root directory of the project)
 
@@ -73,4 +75,4 @@ A basic start has been made on making the program easily portable to other curre
 
 #### Testing
 
-There are unit tests for each of the offer types implemented, and for the `Pricer` class, which is responsible for applying all offers to a basket and generating a pricing summary.
+There are unit tests for each of the offer types implemented, and for the `Pricer` class, which is responsible for applying all offers to a basket and generating a pricing summary.  Ideally a few more of the classes would have had tests, such as the `BasketBuilder`.
