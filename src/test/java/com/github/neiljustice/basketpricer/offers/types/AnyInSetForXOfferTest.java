@@ -14,7 +14,10 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class AnyInSetForXOfferTest {
 
@@ -43,12 +46,12 @@ class AnyInSetForXOfferTest {
 
     @Test
     void constructionShouldFailIfQuantityLessThan2() {
-        assertThrows(OfferException.class, () ->  new AnyInSetForXOffer(Arrays.asList("Ale 1", "Ale 2"), 1, new BigDecimal("2.99")));
+        assertThrows(OfferException.class, () -> new AnyInSetForXOffer(Arrays.asList("Ale 1", "Ale 2"), 1, new BigDecimal("2.99")));
     }
 
     @Test
     void constructionShouldFailIfPriceNotPositive() {
-        assertThrows(OfferException.class, () ->  new AnyInSetForXOffer(Arrays.asList("Ale 1", "Ale 2"), 2, new BigDecimal("-2.99")));
+        assertThrows(OfferException.class, () -> new AnyInSetForXOffer(Arrays.asList("Ale 1", "Ale 2"), 2, new BigDecimal("-2.99")));
     }
 
     @Test

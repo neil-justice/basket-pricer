@@ -1,8 +1,8 @@
 package com.github.neiljustice.basketpricer.demo;
 
 import com.github.neiljustice.basketpricer.BasketPricing;
-import com.github.neiljustice.basketpricer.Pricer;
 import com.github.neiljustice.basketpricer.ItemInfo;
+import com.github.neiljustice.basketpricer.Pricer;
 import com.github.neiljustice.basketpricer.basket.Basket;
 import com.github.neiljustice.basketpricer.basket.BasketBuilder;
 import com.github.neiljustice.basketpricer.basket.PricingUnit;
@@ -17,6 +17,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class Demo {
+
+    public static void main(String[] args) {
+        new Demo().example1();
+        new Demo().example2();
+    }
 
     /**
      * This example is taken from the exercise instructions.
@@ -72,10 +77,5 @@ public class Demo {
 
         final BasketPricing pricing = new Pricer(offers, itemInfo).priceBasket(basket);
         pricing.printSummary();
-    }
-
-    public static void main(String[] args) {
-        new Demo().example1();
-        new Demo().example2();
     }
 }

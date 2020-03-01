@@ -63,7 +63,7 @@ public class BasketPricing {
         }
         System.out.printf("%-35s %s%.2f\n", "Sub-total", currencySymbol, preOffers);
         System.out.println("Offers:");
-        for (AppliedOffer offer: offers) {
+        for (AppliedOffer offer : offers) {
             System.out.printf("%-35s -%s%.2f\n", offer.getName(), currencySymbol, offer.getSavings());
         }
         System.out.printf("%-35s -%s%.2f\n\n", "Total savings", currencySymbol, savings);
