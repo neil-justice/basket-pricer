@@ -17,6 +17,7 @@ public class BasketBuilder {
         return withItem(name, 1);
     }
 
+    // TODO it would be good to validate quantities, e.g. prevent non-positive quantities
     public BasketBuilder withItem(String name, int quantity) {
         final Item item = itemInfo.getItem(name);
         if (item == null) {
@@ -33,6 +34,7 @@ public class BasketBuilder {
         return this;
     }
 
+    // TODO it would be good to validate quantities, e.g. prevent non-positive quantities
     public BasketBuilder withItemByWeightKilos(String name, BigDecimal quantity) {
         final Item item = itemInfo.getItem(name);
         if (item == null) {

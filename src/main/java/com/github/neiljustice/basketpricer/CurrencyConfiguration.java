@@ -1,6 +1,7 @@
 package com.github.neiljustice.basketpricer;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Currency;
 
 /**
@@ -17,8 +18,8 @@ public final class CurrencyConfiguration {
         // Disable instantiation
     }
 
-    public static int getRoundingMode() {
-        return BigDecimal.ROUND_HALF_EVEN;
+    public static RoundingMode getRoundingMode() {
+        return RoundingMode.HALF_EVEN;
     }
 
     public static Currency getCurrency() {
